@@ -35,38 +35,13 @@ public class SoulLinkedMob {
     public static final String MODID = "soullinkedmob";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
-    // Create a Deferred Register to hold Blocks which will all be registered under the "soulLinkedMob" namespace
 
     public SoulLinkedMob() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        // Register the commonSetup method for modloading
-        modEventBus.addListener(this::commonSetup);
-
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
-
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        // Some common setup code
-    }
-
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) {
-        // Do something when the server starts
-    }
-
-//    @SubscribeEvent
-//    public static void onMobDies(LivingDeathEvent event) {
-//        var en = (TamableAnimal)event.getEntity();
-//        if(en.isTame() && en.getOwner() != null) {
-//            en.getOwner().kill();
-//        }
-//        System.out.println("Event fired :harold:");
-//    }
-
-    // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class ClientModEvents {
 
