@@ -32,13 +32,12 @@ public class SoulLinkedMob {
         MinecraftForge.EVENT_BUS.register(this);
     }
     public void onMobDies(LivingDeathEvent event) {
-        LivingEntity var2 = event.getEntity();
+        LivingEntity var2 = (LivingEntity) event.getEntity();
         if (var2 instanceof TamableAnimal e) {
             if (e.isTame() && e.getOwner() != null) {
                 DamageSource source = new IndirectEntityDamageSource("souldeath", e, event.getEntity());
                 source.bypassInvul();
                 source.bypassArmor();
-                source.bypassEnchantments();
                 source.bypassMagic();
                 e.getOwner().hurt(source, Float.MAX_VALUE);
             }
