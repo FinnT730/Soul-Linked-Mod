@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.damagesource.IndirectEntityDamageSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.TamableAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,20 +24,17 @@ public class SoulLinkedMob {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public SoulLinkedMob() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+//        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+        MinecraftForge.EVENT_BUS.addListener(this::onMobDies);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
-    @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class ClientModEvents {
-
-        @SubscribeEvent
-        public static void onMobDies(LivingDeathEvent event) {
-
-            if(event.getEntity() instanceof TamableAnimal e && e.isTame() && e.getOwner() != null) {
-//                    ((Player) e.getOwner()).
-//                e.getOwner().kill();
+    public void onMobDies(LivingDeathEvent event) {
+        LivingEntity var2 = event.getEntity();
+        if (var2 instanceof TamableAnimal e) {
+            if (e.isTame() && e.getOwner() != null) {
                 DamageSource source = new IndirectEntityDamageSource("souldeath", e, event.getEntity());
                 source.bypassInvul();
                 source.bypassArmor();
@@ -44,10 +42,6 @@ public class SoulLinkedMob {
                 source.bypassMagic();
                 e.getOwner().hurt(source, Float.MAX_VALUE);
             }
-
-//            if(event.getEntity() instanceof TamableAnimal e && e.isTame() && e.getOwner() != null) {
-//                e.getOwner().kill();
-//            }
         }
 
     }
